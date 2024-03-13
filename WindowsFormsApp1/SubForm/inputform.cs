@@ -31,7 +31,7 @@ namespace WindowsFormsApp1
             for (int i = 0; i < 9; i++)
             {
                 numberBtn[i] = new Button();
-                numberBtn[i].Font = Form1.buttonFont;
+                numberBtn[i].Font = MainForm.buttonFont;
                 numberBtn[i].Text = (i + 1).ToString();
                 numberBtn[i].Dock = DockStyle.Fill;
                 numberBtn[i].Margin = new Padding(0);

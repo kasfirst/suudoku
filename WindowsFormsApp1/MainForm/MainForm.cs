@@ -1,21 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private const int TLPSize = 400;
         private const int FLPWidth = 150;
         public static Font buttonFont = new Font("游ゴシック", 12);
         private readonly int[] box_start = { 0, 3, 6, 27, 30, 33, 54, 57, 60 };
         private readonly int[] box_offset = { 0, 1, 2, 9, 10, 11, 18, 19, 20 };
+        private HintForm inputDialog = null;
 
         int[] kazu = new int[81];
 
-        public Form1()
+        public MainForm()
         {
             Load += Form1_load;
         }
@@ -72,12 +74,6 @@ namespace WindowsFormsApp1
 
         private void Kensyo_Cancel_Click(object sender, EventArgs e)
         {
-            int d;
-            for (int i = 0; i < 81; i++)
-            {
-                int.TryParse(numberBtn[i].Text, out d);
-                kazu[i] = d;
-            }
             
             solveBtn.Enabled = false;
             kensyoBtn.Enabled = true;
@@ -151,6 +147,45 @@ namespace WindowsFormsApp1
                 hintBtn.Enabled = false;
             }
         }
+
+        private void Hint_Click(object sender, EventArgs e)
+        {
+            List<int>[,] possible_numbers = new List<int>[9, 9]; // 各マスの入力可能数字のリストを保持する2次元配列
+            // 各マスの入力可能数字を計算
+            for (int row = 0; row < 9; row++)
+            {
+                for (int col = 0; col < 9; col++)
+                {
+                    if (kazu[row * 9 + col] == 0)
+                    {
+                        // 各マスに対して入力可能な数字のリストを初期化
+                        possible_numbers[row, col] = new List<int>();
+
+                        // 1から9までの数字を順番にチェックし、重複しない場合にリストに追加
+                        for (int num = 1; num <= 9; num++)
+                        {
+                            if (IsOK(row * 9 + col, num, kazu))
+                            {
+                                possible_numbers[row, col].Add(num);
+                            }
+                        }
+                    }
+                }
+            }
+            if(inputDialog == null || inputDialog.IsDisposed)
+            {
+                inputDialog = new HintForm(possible_numbers);
+                inputDialog.Show();
+            }
+            else
+            {
+                // 既存のダイアログがあれば、その内容を更新
+                inputDialog.UpdateContent(possible_numbers); 
+            }
+        }
+
+
+
         private bool Try()
         {
             int blank_position = Array.IndexOf(kazu, 0);

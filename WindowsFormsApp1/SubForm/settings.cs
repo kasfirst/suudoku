@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         FlowLayoutPanel flp1 = new FlowLayoutPanel();
         TableLayoutPanel tlp1 = new TableLayoutPanel();
@@ -88,7 +88,7 @@ namespace WindowsFormsApp1
             hintBtn.Width = (int)(flp1.Width * 0.8);
             hintBtn.Anchor = AnchorStyles.None;
             hintBtn.Enabled = false;
-            hintBtn.Click += New_Click;
+            hintBtn.Click += Hint_Click;
 
             solveBtn.AutoSize = true;
             solveBtn.Font = buttonFont;
